@@ -11,6 +11,9 @@
 #define RIGHT 77
 #define SPACEBAR 32
 
+void BlockPrint();
+
+
 
 // Console창의 원하는 x,y위치로 이동하게 하는 함수
 void Console_GoToXY(int x, int y) {
@@ -35,8 +38,8 @@ int KeyInput(void) {
 	int y = 10; //처음 시작 위치 y값
 
 	Console_GoToXY(x, y);
-	/*
-	printf("★");
+	
+	BlockPrint();
 	while (1) {
 		// _kbhit는 키를 누른 경우 0이 아닌 값을 반환한다.
 		if (_kbhit()) {
@@ -53,22 +56,26 @@ int KeyInput(void) {
 				case UP:	
 					system("cls");
 					Console_GoToXY(x,--y);
-					printf("★");
+					BlockPrint();
+
 					break;
 				case DOWN:	
 					system("cls");
 					Console_GoToXY(x, ++y);
-					printf("★");
+					BlockPrint();
+
 					break;
 				case LEFT:	
 					system("cls");
-					Console_GoToXY(--x, y);
-					printf("★");
+					Console_GoToXY(x-2, y);
+					BlockPrint();
+
 					break;
 				case RIGHT:	
 					system("cls");
-					Console_GoToXY(++x, y);
-					printf("★");
+					Console_GoToXY(x+2, y);
+					BlockPrint();
+
 					break;
 				default: break;
 				}
@@ -76,14 +83,13 @@ int KeyInput(void) {
 		}
 		
 	}
-	*/
+	
 }
 
 void BlockPrint() {
 	for (int row = 0; row < 4; row++) {
 		for (int col = 0; col < 4; col++) {
-			Console_GoToXY(col * 2, row);
-			if (Block[6][0][row][col] == 2) {
+			if (Block[1][0][row][col] == 2) {
 				printf("■");
 			}
 		}

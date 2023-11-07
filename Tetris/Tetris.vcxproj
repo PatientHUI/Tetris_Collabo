@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blocks.h" />
+    <ClInclude Include="Board.h" />
     <ClInclude Include="KeyBoard.h" />
     <ClInclude Include="test.h" />
   </ItemGroup>
