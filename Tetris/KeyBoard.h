@@ -20,8 +20,9 @@ void textcolor(int colorNum) {
 }
 
 
+
 // Console창의 원하는 x,y위치로 이동하게 하는 함수
-void Console_GoToXY(int x, int y) {
+void gotoxy(int x, int y) {
 	COORD Pos;	//COORD는 x,y값 저장하는 구조체 자료형(windows.h에 포함)
 	Pos.X = x;
 	Pos.Y = y;
@@ -42,17 +43,20 @@ int KeyInput(void) {
 	
 	int x = BoardX + 2 * 5;
 	int y = BoardY;
-	Console_GoToXY(x,y);
-	BoardPrint();
+	gotoxy(x,y);
 	//BlockPrint();
 
 	while (1) {
 		// _kbhit는 키를 누른 경우 0이 아닌 값을 반환한다.
+		BoardPrint();
+
 		if (_kbhit()) {
 			KeyNow = _getch();
 
 			if (KeyNow == SPACEBAR) {
-				printf("SPACEBAR을 입력받았습니다.\n");
+				gotoxy(x, y);
+				printf("x:%d y:%d", x, y);
+
 			}
 			// 방향키는 아스키코드 상 확장키이다. 2바이트의 두개의 값을 받고 첫번째 224, 두번째는 Up,Down,Left,Right에 따라 다른 정수를 받아온다.  
 			if (KeyNow == ARROW) {
@@ -61,29 +65,33 @@ int KeyInput(void) {
 
 				case UP:	
 					system("cls");
-					BoardPrint();
-					Console_GoToXY(x,--y);
+					gotoxy(x,--y);
+					//printf("x: %d y: %d", x, y);
+					
 					BlockPrint();
 
 					break;
 				case DOWN:	
 					system("cls");
-					BoardPrint();
-					Console_GoToXY(x, ++y);
+					gotoxy(x, ++y);
+					//printf("x: %d y: %d", x, y);
+
 					BlockPrint();
 
 					break;
 				case LEFT:	
 					system("cls");
-					BoardPrint();
-					Console_GoToXY(x-2, y);
+					gotoxy(x-=2, y);
+					//printf("x: %d y: %d", x, y);
+
 					BlockPrint();
 
 					break;
 				case RIGHT:	
 					system("cls");
-					BoardPrint();
-					Console_GoToXY(x+2, y);
+					gotoxy(x+=2, y);
+					//printf("x: %d y: %d", x, y);
+
 					BlockPrint();
 
 					break;
@@ -102,6 +110,7 @@ void BlockPrint() {
 		for (int col = 0; col < 4; col++) {
 
 			if (Block[1][0][row][col] == 2) {
+				//Console_GoToXY(Block_X + col, BoardY + row);
 				printf("▣");
 			}
 		}
@@ -114,7 +123,7 @@ void BoardPrint() {
 	// 보드 상단의 한계선 
 	for (int x = 1; x < 13; x++) {
 		//콘솔창상 x*2가 한칸
-		Console_GoToXY(BoardX + x * 2, BoardY + 1);
+		gotoxy(BoardX + x * 2, BoardY + 1);
 		
 		//printf("~");
 		
@@ -125,14 +134,14 @@ void BoardPrint() {
 	for (int y = 0; y < B_HEIGHT; y++) {
 
 		// 왼쪽 테두리
-		Console_GoToXY(BoardX, BoardY + y -1);
+		gotoxy(BoardX, BoardY + y-1);
 		if (board[y][0] == 1) {
 			textcolor(2);
 			printf("▣");
 		}
 
 		// 오른쪽 테두리
-		Console_GoToXY(BoardX + B_WIDTH * 2 - 3, BoardY + y -1);
+		gotoxy(BoardX + B_WIDTH * 2 - 3, BoardY + y-1);
 		if (board[y][B_WIDTH - 1] == 1) {
 			textcolor(2);
 			printf("▣");
@@ -142,7 +151,7 @@ void BoardPrint() {
 
 	// 아랫쪽 테두리
 	for (int x = 0; x < B_WIDTH; x++) {
-		Console_GoToXY(BoardX + x, BoardY +  B_HEIGHT -1 );
+		gotoxy(BoardX + x, BoardY +  B_HEIGHT -1 );
 		
 		if (board[B_HEIGHT - 1][x] == 1) {
 			textcolor(2);
