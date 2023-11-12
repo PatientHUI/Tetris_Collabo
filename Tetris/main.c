@@ -3,7 +3,8 @@
 #include "KeyBoard.h"
 
 int main() {
-	CursorView(false, 1);
+	CursorView(true, 1);
 	KeyInput();
-	BlockPrint();
+	
+
 }

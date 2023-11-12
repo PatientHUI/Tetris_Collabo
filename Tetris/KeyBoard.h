@@ -1,8 +1,10 @@
 #pragma once
 #include <conio.h>
-#include <windows.h>
+#include <Windows.h>
 #include <stdbool.h>
 #include "Blocks.h"
+#include "Board.h"
+
 
 #define ARROW 224
 #define UP 72
@@ -12,7 +14,10 @@
 #define SPACEBAR 32
 
 void BlockPrint();
-
+void BoardPrint();
+void textcolor(int colorNum) {
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
+}
 
 
 // Console창의 원하는 x,y위치로 이동하게 하는 함수
@@ -34,12 +39,13 @@ void CursorView(bool Visibility,int CursorSize) {
 
 int KeyInput(void) {
 	int KeyNow;
-	int x = 20; //처음 시작 위치 x값
-	int y = 10; //처음 시작 위치 y값
-
-	Console_GoToXY(x, y);
 	
-	BlockPrint();
+	int x = BoardX + 2 * 5;
+	int y = BoardY;
+	Console_GoToXY(x,y);
+	BoardPrint();
+	//BlockPrint();
+
 	while (1) {
 		// _kbhit는 키를 누른 경우 0이 아닌 값을 반환한다.
 		if (_kbhit()) {
@@ -55,29 +61,34 @@ int KeyInput(void) {
 
 				case UP:	
 					system("cls");
+					BoardPrint();
 					Console_GoToXY(x,--y);
 					BlockPrint();
 
 					break;
 				case DOWN:	
 					system("cls");
+					BoardPrint();
 					Console_GoToXY(x, ++y);
 					BlockPrint();
 
 					break;
 				case LEFT:	
 					system("cls");
+					BoardPrint();
 					Console_GoToXY(x-2, y);
 					BlockPrint();
 
 					break;
 				case RIGHT:	
 					system("cls");
+					BoardPrint();
 					Console_GoToXY(x+2, y);
 					BlockPrint();
 
 					break;
-				default: break;
+
+				
 				}
 			}
 		}
@@ -85,16 +96,79 @@ int KeyInput(void) {
 	}
 	
 }
-
+	
 void BlockPrint() {
 	for (int row = 0; row < 4; row++) {
 		for (int col = 0; col < 4; col++) {
+
 			if (Block[1][0][row][col] == 2) {
-				printf("■");
+				printf("▣");
 			}
 		}
 	}
+
+}
+
+void BoardPrint() {
+
+	// 보드 상단의 한계선 
+	for (int x = 1; x < 13; x++) {
+		//콘솔창상 x*2가 한칸
+		Console_GoToXY(BoardX + x * 2, BoardY + 1);
+		
+		//printf("~");
+		
+	}
+
+	// 보드 테두리 구현
+		
+	for (int y = 0; y < B_HEIGHT; y++) {
+
+		// 왼쪽 테두리
+		Console_GoToXY(BoardX, BoardY + y -1);
+		if (board[y][0] == 1) {
+			textcolor(2);
+			printf("▣");
+		}
+
+		// 오른쪽 테두리
+		Console_GoToXY(BoardX + B_WIDTH * 2 - 3, BoardY + y -1);
+		if (board[y][B_WIDTH - 1] == 1) {
+			textcolor(2);
+			printf("▣");
+		}
+
+	}
+
+	// 아랫쪽 테두리
+	for (int x = 0; x < B_WIDTH; x++) {
+		Console_GoToXY(BoardX + x, BoardY +  B_HEIGHT -1 );
+		
+		if (board[B_HEIGHT - 1][x] == 1) {
+			textcolor(2);
+			printf("▣");
+		}
+
+
+	}
+	textcolor(7);
+
+
+
+}
+
+void BoardAndBlock() {
+	
 }
 
 
+void BlockCollide() {
 
+
+}
+
+
+void Move_Limit() {
+	
+
+}
