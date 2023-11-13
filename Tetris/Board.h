@@ -29,30 +29,3 @@ int board[B_HEIGHT][B_WIDTH] = {  // 세로 15+1(아래벽)칸, 가로 10+2(양쪽 벽)칸
 	{1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-
-void removeline() {
-	for (int i = 21; i >= 0; i--) {
-		int cnt = 0;
-		for (int j = 1; j < 13; j++) {
-			if (board[i][j] == 2) {
-				cnt++;
-			}
-		}
-		// 블럭이 한줄 꽉 찬 경우
-		if (cnt == 12) {
-
-			// 밑에 설명 필요
-			for (int j = 0; i - j >= 0; j++) {
-				for (int x = 1; x < 11; x++) {
-					if (i - j - 1 >= 0) {
-						board[i - j][x] = board[i - j - 1][x];
-					}
-					else {
-						board[i - j][x] = 0;
-					}
-				}
-			}
-		}
-	}
-
-}

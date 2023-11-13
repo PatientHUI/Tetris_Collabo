@@ -1,10 +1,20 @@
 #pragma warning(disable:4996)
 #include <stdio.h>
-#include "KeyBoard.h"
+#include "Function.h"
 
 int main() {
-	CursorView(true, 1);
-	KeyInput();
+	CursorView(false, 1);
+	blockform = CreateRandomForm();
+	blockform_next = CreateRandomForm();
+	while (true) {
+
+		BoardPrint();
+		system("cls");
+		BlockPrint();
+		KeyInput();
+
+
+	}
 
 
 }

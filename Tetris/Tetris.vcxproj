@@ -132,9 +132,7 @@
   <ItemGroup>
     <ClInclude Include="Blocks.h" />
     <ClInclude Include="Board.h" />
-    <ClInclude Include="KeyBoard.h" />
-    <ClInclude Include="NewBlock.h" />
-    <ClInclude Include="test.h" />
+    <ClInclude Include="Function.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
