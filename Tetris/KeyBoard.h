@@ -68,6 +68,7 @@ int KeyInput(void) {
 					gotoxy(x,--y);
 					//printf("x: %d y: %d", x, y);
 					
+					blockRotation++;
 					BlockPrint();
 
 					break;
