@@ -19,6 +19,8 @@ void textcolor(int colorNum) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
 }
 
+int x = BoardX + 2 * 5;	// 커서 x값 전역변수
+int y = BoardY;	// 커서 y값 전역변수
 
 
 // Console창의 원하는 x,y위치로 이동하게 하는 함수
@@ -41,9 +43,10 @@ void CursorView(bool Visibility,int CursorSize) {
 int KeyInput(void) {
 	int KeyNow;
 	
-	int x = BoardX + 2 * 5;
-	int y = BoardY;
-	gotoxy(x,y);
+	int x_start = BoardX + 2 * 5;
+	int y_start = BoardY;
+	gotoxy(x_start,y_start);
+	
 	//BlockPrint();
 
 	while (1) {
@@ -110,7 +113,7 @@ void BlockPrint() {
 		for (int col = 0; col < 4; col++) {
 
 			if (Block[1][0][row][col] == 2) {
-				//Console_GoToXY(Block_X + col, BoardY + row);
+				gotoxy(x + col*2, y + row);
 				printf("▣");
 			}
 		}
@@ -123,9 +126,9 @@ void BoardPrint() {
 	// 보드 상단의 한계선 
 	for (int x = 1; x < 13; x++) {
 		//콘솔창상 x*2가 한칸
-		gotoxy(BoardX + x * 2, BoardY + 1);
+		gotoxy(BoardX + x * 2, BoardY );
 		
-		//printf("~");
+		printf("~");
 		
 	}
 
@@ -134,14 +137,14 @@ void BoardPrint() {
 	for (int y = 0; y < B_HEIGHT; y++) {
 
 		// 왼쪽 테두리
-		gotoxy(BoardX, BoardY + y-1);
+		gotoxy(BoardX, BoardY + y);
 		if (board[y][0] == 1) {
 			textcolor(2);
 			printf("▣");
 		}
 
 		// 오른쪽 테두리
-		gotoxy(BoardX + B_WIDTH * 2 - 3, BoardY + y-1);
+		gotoxy(BoardX + B_WIDTH * 2 - 2, BoardY + y);
 		if (board[y][B_WIDTH - 1] == 1) {
 			textcolor(2);
 			printf("▣");
@@ -151,7 +154,7 @@ void BoardPrint() {
 
 	// 아랫쪽 테두리
 	for (int x = 0; x < B_WIDTH; x++) {
-		gotoxy(BoardX + x, BoardY +  B_HEIGHT -1 );
+		gotoxy(BoardX + x*2, BoardY +  B_HEIGHT -1 );
 		
 		if (board[B_HEIGHT - 1][x] == 1) {
 			textcolor(2);

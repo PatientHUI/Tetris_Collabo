@@ -5,6 +5,6 @@
 int main() {
 	CursorView(true, 1);
 	KeyInput();
-	
+
 
 }
