@@ -6,6 +6,7 @@ int main() {
 	CursorView(false, 1);
 	blockform = CreateRandomForm();
 	blockform_next = CreateRandomForm();
+	startDropT = clock();
 	while (true) {
 
 		BoardPrint();
