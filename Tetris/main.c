@@ -13,7 +13,6 @@ int main() {
 		system("cls");
 		BlockPrint();
 		DropBlock();
-		BlockToGround();
 		removeline();
 		KeyInput();
 
