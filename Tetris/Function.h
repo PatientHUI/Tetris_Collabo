@@ -264,20 +264,19 @@ void removeline() {
 		int cnt = 0;
 		for (int j = 1; j < 13; j++) {
 			if (board[i][j] == 2) {
-				cnt++;
+				cnt++;//블럭 카운팅
 			}
 		}
 		// 블럭이 한줄 꽉 찬 경우
-		if (cnt == 12) {
-
-			// 밑에 설명 필요
+		if (cnt >= 12) {
 			for (int j = 0; i - j >= 0; j++) {
-				for (int x = 1; x < 11; x++) {
-					if (i - j - 1 >= 0) {
-						board[i - j][x] = board[i - j - 1][x];
+				for (int x = 1; x < 13; x++) {
+					if (i - j >= 1) //맨윗칸이 아니라면
+					{
+						board[i - j][x] = board[i - j - 1][x];//보드 윗줄 내리기(원래 줄 삭제)
 					}
 					else {
-						board[i - j][x] = 0;
+						board[i - j][x] = 0;//맨위면 블럭 한줄만 삭제
 					}
 				}
 			}
@@ -289,53 +288,43 @@ void removeline() {
 int CreateRandomForm() {
 	srand(time(NULL));
 	return rand() % 7;
-	
+
 }
-bool CheckCrash(int x, int y) {
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 4; j++) {
-			if (Block[Block_kinds][Block_Rotation][i][j] == 1) {
-				int t = board[i + y][j + x / 2];
-				if (t == 1 || t == 2) { // 벽일 때, 블럭일 때
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-clock_t startDropT, endT, startGroundT;
+
 void DropBlock()
 {
 	endT = clock();
 	if ((float)(endT - startDropT) >= 700)//0.7초동안 반응이 없으면 내려옴
 	{
-		if (CheckCrash(x, y + 1) == true) return;//블럭이 충돌하면 함수 종료
+		if (BottomCollide_Check(x,y) == true) return;//블럭이 충돌하면 함수 종료
 		y++;//아니면 한칸 아래로 이동
 		startDropT = clock();//블럭 생성시간을 새롭게 저장
+		startGroundT = clock();//블럭
 		system("cls");
 	}
 }
 
 void BlockToGround() //충돌이후
 {
-	if (CheckCrash(x, y + 1) == true) {
+	if (BottomCollide_Check(x,y) == true)//아래 블럭과 충돌
+	{
 		if ((float)(endT - startGroundT) > 1500)//충돌 후 1.5초가 지나면
 		{
 			// 현재 블록 저장
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					if (Block[Block_kinds][Block_Rotation][i][j] == 1) {
-						board[i + y][j + x / 2] = 2;//고정된 블럭으로 입력
+					if (Block[blockform][block_rotation][i][j] == 1) 
+					{
+						board[i + y][j + x /2] = 2;//고정된 블럭으로 입력
 					}
 				}
 			}
 			x = 11;
-			y = 0;//다음 생성 블럭의 위치
-			CreateRandomForm();
+			y = 0;//다음 생성 블럭의 위치(보드의 가운데 맨위)
 		}
 	}
 }
+
 
 void textcolor(int colorNum) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
