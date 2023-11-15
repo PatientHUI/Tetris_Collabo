@@ -12,6 +12,9 @@ int main() {
 		BoardPrint();
 		system("cls");
 		BlockPrint();
+		DropBlock();
+		BlockToGround();
+		removeline();
 		KeyInput();
 
 
