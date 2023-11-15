@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include "Blocks.h"
 #include "Board.h"
-#include <stdlib.h> //srand, rand¸¦ »ç¿ëÇÏ±â À§ÇÑ Çì´õÆÄÀÏ
-#include <time.h> // timeÀ» »ç¿ëÇÏ±â À§ÇÑ Çì´õÆÄÀÏ
+#include <stdlib.h> //srand, randë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•œ í—¤ë”íŒŒì¼
+#include <time.h> // timeì„ ì‚¬ìš©í•˜ê¸° ìœ„í•œ í—¤ë”íŒŒì¼
 
 #define ARROW 224
 #define UP 72
@@ -22,34 +22,34 @@ bool SideCollide_Check(int,int);
 void ChangeToFixedBlock(int, int);
 int CreateRandomForm();
 
-int x = BoardX + 2 * 5;	// Ä¿¼­ x°ª Àü¿ªº¯¼ö
-int y = BoardY;	// Ä¿¼­ y°ª Àü¿ªº¯¼ö
+int x = BoardX + 2 * 5;	// ì»¤ì„œ xê°’ ì „ì—­ë³€ìˆ˜
+int y = BoardY;	// ì»¤ì„œ yê°’ ì „ì—­ë³€ìˆ˜
 int x_start = BoardX + 2 * 5;
 int y_start = BoardY;
 int blockform = 0;
 int blockform_next = 0;
 int block_rotation = 0;
-// ConsoleÃ¢ÀÇ ¿øÇÏ´Â x,yÀ§Ä¡·Î ÀÌµ¿ÇÏ°Ô ÇÏ´Â ÇÔ¼ö
+// Consoleì°½ì˜ ì›í•˜ëŠ” x,yìœ„ì¹˜ë¡œ ì´ë™í•˜ê²Œ í•˜ëŠ” í•¨ìˆ˜
 void gotoxy(int x, int y) {
-	COORD Pos;	//COORD´Â x,y°ª ÀúÀåÇÏ´Â ±¸Á¶Ã¼ ÀÚ·áÇü(windows.h¿¡ Æ÷ÇÔ)
+	COORD Pos;	//COORDëŠ” x,yê°’ ì €ì¥í•˜ëŠ” êµ¬ì¡°ì²´ ìë£Œí˜•(windows.hì— í¬í•¨)
 	Pos.X = x;
 	Pos.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos); //¿øÇÏ´Â x,yÀ§Ä¡·Î ÀÌµ¿ Pos´Â x,y ÁÖ¼Ò ÀúÀå
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos); //ì›í•˜ëŠ” x,yìœ„ì¹˜ë¡œ ì´ë™ PosëŠ” x,y ì£¼ì†Œ ì €ì¥
 }
 
-// CursorÀÇ Visible ¿©ºÎ¿Í Size °áÁ¤ÇÏ´Â ÇÔ¼ö
+// Cursorì˜ Visible ì—¬ë¶€ì™€ Size ê²°ì •í•˜ëŠ” í•¨ìˆ˜
 void CursorView(bool Visibility,int CursorSize) {
 	CONSOLE_CURSOR_INFO ConsoleCursor;
 	ConsoleCursor.bVisible = Visibility;
 	ConsoleCursor.dwSize = CursorSize;
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &ConsoleCursor);  //ConsoleCursorÀÇ ÁÖ¼Ò°ª ÀÚÃ¼¸¦ Àü´Ş
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &ConsoleCursor);  //ConsoleCursorì˜ ì£¼ì†Œê°’ ìì²´ë¥¼ ì „ë‹¬
 }
 
 
 void KeyInput(void) {
 	int KeyNow;
 	bool B,S;
-		// _kbhit´Â Å°¸¦ ´©¸¥ °æ¿ì 0ÀÌ ¾Æ´Ñ °ªÀ» ¹İÈ¯ÇÑ´Ù.
+		// _kbhitëŠ” í‚¤ë¥¼ ëˆ„ë¥¸ ê²½ìš° 0ì´ ì•„ë‹Œ ê°’ì„ ë°˜í™˜í•œë‹¤.
 
 		if (_kbhit()) {
 			KeyNow = _getch();
@@ -64,7 +64,7 @@ void KeyInput(void) {
 				}
 				
 			}
-			// ¹æÇâÅ°´Â ¾Æ½ºÅ°ÄÚµå »ó È®ÀåÅ°ÀÌ´Ù. 2¹ÙÀÌÆ®ÀÇ µÎ°³ÀÇ °ªÀ» ¹Ş°í Ã¹¹øÂ° 224, µÎ¹øÂ°´Â Up,Down,Left,Right¿¡ µû¶ó ´Ù¸¥ Á¤¼ö¸¦ ¹Ş¾Æ¿Â´Ù.  
+			// ë°©í–¥í‚¤ëŠ” ì•„ìŠ¤í‚¤ì½”ë“œ ìƒ í™•ì¥í‚¤ì´ë‹¤. 2ë°”ì´íŠ¸ì˜ ë‘ê°œì˜ ê°’ì„ ë°›ê³  ì²«ë²ˆì§¸ 224, ë‘ë²ˆì§¸ëŠ” Up,Down,Left,Rightì— ë”°ë¼ ë‹¤ë¥¸ ì •ìˆ˜ë¥¼ ë°›ì•„ì˜¨ë‹¤.  
 			if (KeyNow == ARROW) {
 				KeyNow = _getch();
 				switch (KeyNow) {
@@ -76,11 +76,11 @@ void KeyInput(void) {
 					break;
 
 				case DOWN:	
-					// ÇÑÄ­¾Æ·¡ y°ª¿¡¼­ Ãæµ¹ÇÏ´ÂÁö °Ë»ç
+					// í•œì¹¸ì•„ë˜ yê°’ì—ì„œ ì¶©ëŒí•˜ëŠ”ì§€ ê²€ì‚¬
 					B = BottomCollide_Check(x, ++y);
 					--y;
 					if (B == true) {
-						//¾Æ·¡ÂÊ Àå¾Ö¹°°ú Ãæµ¹ÇÏ´Â °æ¿ì °íÁ¤ºí·°ÀÌ µÊ
+						//ì•„ë˜ìª½ ì¥ì• ë¬¼ê³¼ ì¶©ëŒí•˜ëŠ” ê²½ìš° ê³ ì •ë¸”ëŸ­ì´ ë¨
 						ChangeToFixedBlock(x,y);
 						x = x_start;
 						y = y_start;
@@ -90,7 +90,7 @@ void KeyInput(void) {
 						
 					}
 					else {
-						// Ãæµ¹ X-> ¾Æ·¡·Î ÀÌµ¿
+						// ì¶©ëŒ X-> ì•„ë˜ë¡œ ì´ë™
 						gotoxy(x, ++y);
 					}
 					break;
@@ -99,7 +99,7 @@ void KeyInput(void) {
 					S = SideCollide_Check(x -= 2, y);
 					x += 2;
 					if (S == false) {
-						//¾Æ·¡ÂÊ Àå¾Ö¹°°ú Ãæµ¹ÇÏ´Â °æ¿ì °íÁ¤ºí·°ÀÌ µÊ
+						//ì•„ë˜ìª½ ì¥ì• ë¬¼ê³¼ ì¶©ëŒí•˜ëŠ” ê²½ìš° ê³ ì •ë¸”ëŸ­ì´ ë¨
 						gotoxy(x -= 2, y);
 						break;
 					}
@@ -111,7 +111,7 @@ void KeyInput(void) {
 					S = SideCollide_Check(x += 2, y);
 					x -= 2;
 					if (S == false) {
-						//¾Æ·¡ÂÊ Àå¾Ö¹°°ú Ãæµ¹ÇÏ´Â °æ¿ì °íÁ¤ºí·°ÀÌ µÊ
+						//ì•„ë˜ìª½ ì¥ì• ë¬¼ê³¼ ì¶©ëŒí•˜ëŠ” ê²½ìš° ê³ ì •ë¸”ëŸ­ì´ ë¨
 						gotoxy(x += 2, y);
 						break;
 					}
@@ -136,7 +136,7 @@ void BlockPrint() {
 				gotoxy(x + col*2, y + row);
 				textcolor(7);
 
-				printf("¢Ã");
+				printf("â–£");
 			}
 		
 		}
@@ -146,49 +146,49 @@ void BlockPrint() {
 
 void BoardPrint() {
 
-	// º¸µå »ó´ÜÀÇ ÇÑ°è¼± 
+	// ë³´ë“œ ìƒë‹¨ì˜ í•œê³„ì„  
 	// 
 	//for (int x = 1; x < 13; x++) {
-	//	//ÄÜ¼ÖÃ¢»ó x*2°¡ ÇÑÄ­
+	//	//ì½˜ì†”ì°½ìƒ x*2ê°€ í•œì¹¸
 	//	gotoxy(BoardX + x * 2, BoardY );
 	//	
 	//	printf("~");
 	//	
 	//}
 
-	// º¸µå Å×µÎ¸® ±¸Çö
+	// ë³´ë“œ í…Œë‘ë¦¬ êµ¬í˜„
 		
 	for (int j = 0; j < B_HEIGHT; j++) {
 
-		// ¿ŞÂÊ Å×µÎ¸®
+		// ì™¼ìª½ í…Œë‘ë¦¬
 		gotoxy(BoardX, BoardY + j);
 		if (board[j][0] == 1) {
 			textcolor(2);
-			printf("¢Ã");
+			printf("â–£");
 		}
 
-		// ¿À¸¥ÂÊ Å×µÎ¸®
+		// ì˜¤ë¥¸ìª½ í…Œë‘ë¦¬
 		gotoxy(BoardX + B_WIDTH * 2 - 2, BoardY + j);
 		if (board[j][B_WIDTH - 1] == 1) {
 			textcolor(2);
-			printf("¢Ã");
+			printf("â–£");
 		}
 
 	}
 
-	// ¾Æ·§ÂÊ Å×µÎ¸®
+	// ì•„ë«ìª½ í…Œë‘ë¦¬
 	for (int i = 0; i < B_WIDTH; i++) {
 		gotoxy(BoardX + i*2, BoardY +  B_HEIGHT -1 );
 		
 		if (board[B_HEIGHT - 1][i] == 1) {
 			textcolor(2);
-			printf("¢Ã");
+			printf("â–£");
 		}
 
 
 	}
 
-	// º¸µå ³»ºÎ ±¸Çö
+	// ë³´ë“œ ë‚´ë¶€ êµ¬í˜„
 
 
 	for (int j = 0; j< B_HEIGHT -1; j++) {
@@ -196,7 +196,7 @@ void BoardPrint() {
 			gotoxy(BoardX + i * 2, BoardY + j);
 			if (board[j][i] == 3) {
 				textcolor(3);
-				printf("¢Â");
+				printf("â—ˆ");
 			}
 			
 		}
@@ -207,14 +207,14 @@ void BoardPrint() {
 
 
 
-//¾Æ·¡ÂÊ Àå¾Ö¹°°ú ºí·°ÀÇ Ãæµ¹¿©ºÎ¸¦ È®ÀÎÇÏ´Â ÇÔ¼ö(Bottom Check)
+//ì•„ë˜ìª½ ì¥ì• ë¬¼ê³¼ ë¸”ëŸ­ì˜ ì¶©ëŒì—¬ë¶€ë¥¼ í™•ì¸í•˜ëŠ” í•¨ìˆ˜(Bottom Check)
 bool BottomCollide_Check(int x,int y) {
 	for(int row = 0; row < 4 ;row++){
 		for (int col = 0; col < 4; col++) {
 			gotoxy(x+col*2, y+row);
-			// ºí·°ÀÌ ÀÖ´Â À§Ä¡¿¡
+			// ë¸”ëŸ­ì´ ìˆëŠ” ìœ„ì¹˜ì—
 			if (Block[blockform][block_rotation][row][col] == 2) {
-				// º¸µå¿Í Ãæµ¹ÇÏ´ÂÁö È®ÀÎ
+				// ë³´ë“œì™€ ì¶©ëŒí•˜ëŠ”ì§€ í™•ì¸
 				if (board[y+ row - 3][(x - 4) / 2 + col] == 1 || board[y + row - 3][(x - 4) / 2 + col] == 3) {
 					return true;
 				}
@@ -226,14 +226,14 @@ bool BottomCollide_Check(int x,int y) {
 	return false;
 }
 
-// ºí·°°ú ¾çÂÊ Àå¾Ö¹° Ãæµ¹¿©ºÎ È®ÀÎÇÏ´Â ÇÔ¼ö(Side Check)
+// ë¸”ëŸ­ê³¼ ì–‘ìª½ ì¥ì• ë¬¼ ì¶©ëŒì—¬ë¶€ í™•ì¸í•˜ëŠ” í•¨ìˆ˜(Side Check)
 bool SideCollide_Check(int x, int y) {
 	for (int row = 0; row < 4; row++) {
 		for (int col = 0; col < 4; col++) {
 			gotoxy(x + col * 2, y + row);
-			// ºí·°ÀÌ ÀÖ´Â À§Ä¡¿¡
+			// ë¸”ëŸ­ì´ ìˆëŠ” ìœ„ì¹˜ì—
 			if (Block[blockform][block_rotation][row][col] == 2) {
-				// º¸µå¿Í Ãæµ¹ÇÏ´ÂÁö È®ÀÎ
+				// ë³´ë“œì™€ ì¶©ëŒí•˜ëŠ”ì§€ í™•ì¸
 				if (board[y + row - 3][(x - 4) / 2 + col] == 1 || board[y + row - 3][(x - 4) / 2 + col] == 3) {
 					return true;
 				}
@@ -246,9 +246,9 @@ bool SideCollide_Check(int x, int y) {
 
 }
 
-// ºí·°°ú ¾Æ·¡ÂÊ Àå¾Ö¹°ÀÌ Ãæµ¹ÇÏ¸é º¸µå¿¡ '3'À¸·Î ÀúÀåÇÏ¿© Á¤Áö ºí·ÏÀ¸·Î º¯°æ 
+// ë¸”ëŸ­ê³¼ ì•„ë˜ìª½ ì¥ì• ë¬¼ì´ ì¶©ëŒí•˜ë©´ ë³´ë“œì— '3'ìœ¼ë¡œ ì €ì¥í•˜ì—¬ ì •ì§€ ë¸”ë¡ìœ¼ë¡œ ë³€ê²½ 
 void ChangeToFixedBlock(int x,int y) {
-	//x,y´Â 4X4ºí·°ÀÇ °¡Àå ¿ŞÂÊ À§ ÁÂÇ¥°ªÀÓ.
+	//x,yëŠ” 4X4ë¸”ëŸ­ì˜ ê°€ì¥ ì™¼ìª½ ìœ„ ì¢Œí‘œê°’ì„.
 	for (int row = 0; row < 4; row++) {
 		for (int col = 0; col < 4; col++) {
 			if (Block[blockform][block_rotation][row][col] == 2) {
@@ -259,9 +259,6 @@ void ChangeToFixedBlock(int x,int y) {
 	}
 }
 
-
-/*
-
 void removeline() {
 	for (int i = 21; i >= 0; i--) {
 		int cnt = 0;
@@ -270,10 +267,10 @@ void removeline() {
 				cnt++;
 			}
 		}
-		// ºí·°ÀÌ ÇÑÁÙ ²Ë Âù °æ¿ì
+		// ë¸”ëŸ­ì´ í•œì¤„ ê½‰ ì°¬ ê²½ìš°
 		if (cnt == 12) {
 
-			// ¹Ø¿¡ ¼³¸í ÇÊ¿ä
+			// ë°‘ì— ì„¤ëª… í•„ìš”
 			for (int j = 0; i - j >= 0; j++) {
 				for (int x = 1; x < 11; x++) {
 					if (i - j - 1 >= 0) {
@@ -289,51 +286,56 @@ void removeline() {
 
 }
 
-*/
-
-
-
 int CreateRandomForm() {
 	srand(time(NULL));
 	return rand() % 7;
+	
 }
-
-
-/*
+bool CheckCrash(int x, int y) {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			if (Block[Block_kinds][Block_Rotation][i][j] == 1) {
+				int t = board[i + y][j + x / 2];
+				if (t == 1 || t == 2) { // ë²½ì¼ ë•Œ, ë¸”ëŸ­ì¼ ë•Œ
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+clock_t startDropT, endT, startGroundT;
 void DropBlock()
 {
 	endT = clock();
-	if ((float)(endT - startDropT) >= 700)//0.7ÃÊµ¿¾È ¹İÀÀÀÌ ¾øÀ¸¸é ³»·Á¿È
+	if ((float)(endT - startDropT) >= 700)//0.7ì´ˆë™ì•ˆ ë°˜ì‘ì´ ì—†ìœ¼ë©´ ë‚´ë ¤ì˜´
 	{
-		if (CheckCrash(x, y + 1) == true) return;//ºí·°ÀÌ Ãæµ¹ÇÏ¸é ÇÔ¼ö Á¾·á
-		y++;//¾Æ´Ï¸é ÇÑÄ­ ¾Æ·¡·Î ÀÌµ¿
-		startDropT = clock();//ºí·° »ı¼º½Ã°£À» »õ·Ó°Ô ÀúÀå
+		if (CheckCrash(x, y + 1) == true) return;//ë¸”ëŸ­ì´ ì¶©ëŒí•˜ë©´ í•¨ìˆ˜ ì¢…ë£Œ
+		y++;//ì•„ë‹ˆë©´ í•œì¹¸ ì•„ë˜ë¡œ ì´ë™
+		startDropT = clock();//ë¸”ëŸ­ ìƒì„±ì‹œê°„ì„ ìƒˆë¡­ê²Œ ì €ì¥
 		system("cls");
 	}
 }
 
-void BlockToGround() //Ãæµ¹ÀÌÈÄ
+void BlockToGround() //ì¶©ëŒì´í›„
 {
 	if (CheckCrash(x, y + 1) == true) {
-		if ((float)(endT - startGroundT) > 1500)//Ãæµ¹ ÈÄ 1.5ÃÊ°¡ Áö³ª¸é
+		if ((float)(endT - startGroundT) > 1500)//ì¶©ëŒ í›„ 1.5ì´ˆê°€ ì§€ë‚˜ë©´
 		{
-			// ÇöÀç ºí·Ï ÀúÀå
+			// í˜„ì¬ ë¸”ë¡ ì €ì¥
 			for (int i = 0; i < 4; i++) {
 				for (int j = 0; j < 4; j++) {
-					if (Block[blockform][0][i][j] == 1) {
-						board[i + y][j + x / 2] = 2;//°íÁ¤µÈ ºí·°À¸·Î ÀÔ·Â
+					if (Block[Block_kinds][Block_Rotation][i][j] == 1) {
+						board[i + y][j + x / 2] = 2;//ê³ ì •ëœ ë¸”ëŸ­ìœ¼ë¡œ ì…ë ¥
 					}
 				}
 			}
-			x = 8;
-			y = 0;//´ÙÀ½ »ı¼º ºí·°ÀÇ À§Ä¡
+			x = 11;
+			y = 0;//ë‹¤ìŒ ìƒì„± ë¸”ëŸ­ì˜ ìœ„ì¹˜
 			CreateRandomForm();
 		}
 	}
 }
-
-*/
-
 
 void textcolor(int colorNum) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
