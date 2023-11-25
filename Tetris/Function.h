@@ -418,6 +418,16 @@ bool Check_Gameover() {
 	return true;
 
 }
+void DrawScreen()	// 화면 전체를 그린다.
+{
+	
+	//	게임에 대한 정보 출력
+	gotoxy(45, 7); printf("!! INTERFACE TETRIS GAME !!");
+	gotoxy(45, 13); printf("◁  ▷ :  Left / Right");
+	gotoxy(45, 14); printf("  ▽   :  Drop");
+	gotoxy(45, 16); printf("SPACE : block rotation");
+
+}
 
 void textcolor(int colorNum) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), colorNum);
