@@ -12,6 +12,7 @@ int main(void) {
 	bool Gameover = true;
 	while (Gameover == true) {
 
+		DrawScreen();
 		BoardPrint();
 		system("cls");
 		BlockPrint();
