@@ -38,13 +38,14 @@ void Board_Blink(int);
 bool Check_Gameover();
 
 
-int x = BoardX + 2 * 5;	// 커서 x값 전역변수
-int y = BoardY;	// 커서 y값 전역변수
+int x = BoardX + 2 * 5;   // 커서 x값 전역변수
+int y = BoardY;   // 커서 y값 전역변수
 int x_start = BoardX + 2 * 5;
 int y_start = BoardY;
 int blockform = 0;
 int blockform_next = 0;
 int block_rotation = 0;
+int currentScore = 0;
 
 clock_t end_T, startDropT, startGroundT;
 
@@ -388,6 +389,8 @@ void removeline() {
 
 			Board_Blink(i);
 
+			currentScore += 100;
+
 			for (int k = 0; i - k >= 0; k++) {
 				for (int a = 1; a < 13; a++) {
 
@@ -447,12 +450,13 @@ bool Check_Gameover() {
 	return true;
 
 }
-void DrawScreen()	// 화면 전체를 그린다.
-{
 
-	//	게임에 대한 정보 출력
+void DrawScreen()   // 화면 전체를 그린다.
+{
+	//   게임에 대한 정보 출력
 	gotoxy(45, 7); printf("!! INTERFACE TETRIS GAME !!");
-	gotoxy(45, 13); printf("◁  ▷ :  Left / Right");
+	gotoxy(45, 10);   printf("Current score: %10d", currentScore);
+	gotoxy(45, 13); printf("◁   ▷ :  Left / Right");
 	gotoxy(45, 14); printf("  ▽   :  Drop");
 	gotoxy(45, 16); printf("SPACE : block rotation");
 
